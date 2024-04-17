@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <script>
+    function calcula(valor) {
+      const numero = Number(valor);
+      const resultado = (numero > 18 && numero < 65) ? 'Menor de edad'
+                          : (numero > 65) ? "Menor de 65"
+                          : "Mayor de edad";
+      return resultado;
+    }
+
+    function inicio(dato) {
+      const mensaje = calcula(dato);
+      salida.innerHTML += (`<br/>El resultado es ${mensaje} `);
+    }
+  </script>
+</head>
+<body>
+  <form name="formulario_edad">
+    Introduce edad: <input type="text" name="entrada" />
+    <input type="button" value="comprueba" onclick="inicio(entrada.value)" />
+  </form>
+  <div id="salida"></div>
+</body>
+</html>

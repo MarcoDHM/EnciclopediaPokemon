@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>Máquina de Votar</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+    }
+
+    .container {
+        width: 400px;
+        margin: 100px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    form {
+        text-align: center;
+    }
+
+    input[type="text"], input[type="button"] {
+        width: 80%;
+        height: 40px;
+        margin-bottom: 10px;
+        padding: 5px 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #salida {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Máquina de Votar</h1>
+    <form name="formu_votacion">
+        <label for="edad">Introduce edad:</label><br>
+        <input type="text" id="edad" name="edad"/><br>
+        <label for="residencia">Introduce residencia:</label><br>
+        <input type="text" id="residencia" name="residencia"/><br>
+        <input type="button" value="Comprobar" onclick="verificar()" />
+    </form>
+    <div id="salida"></div>
+</div>
+
+<script>
+    function comprobarEdadResidencia(edad, residencia) {
+        const esMayorDeEdad = edad >= 18;
+        const esDePalma = residencia.toLowerCase() === "palma";
+        
+        if (esMayorDeEdad && esDePalma) {
+            return "Puede votar";
+        } else if (!esMayorDeEdad) {
+            return "Debe ser mayor de 18 años para votar";
+        } else {
+            return "Debe residir en Palma para votar";
+        }
+    }
+    
+    function verificar() {
+        const edad = parseInt(document.getElementById("edad").value);
+        const residencia = document.getElementById("residencia").value;
+        
+        const resultado = comprobarEdadResidencia(edad, residencia);
+        document.getElementById("salida").innerText = resultado;
+    }
+</script>
+</body>
+</html>

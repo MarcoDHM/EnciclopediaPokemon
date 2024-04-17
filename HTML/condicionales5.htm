@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>www.ibserveis.com Javascript ES9</title>
+  <script>
+    function calcula(valor) {
+      const numero = Number(valor);
+      const resultado = (numero > 25) ? 'Cantidad diaria no adecuada' : 'Cantidad correcta';
+      return resultado;
+    }
+
+    function inicio(dato) {
+      const mensaje = calcula(dato);
+      salida.innerHTML += (`<br/>El resultado es ${mensaje} `);
+    }
+  </script>
+</head>
+<body>
+  <form name="formulario_alimentos">
+    Introduce gramos de azúcar: <input type="text" name="entrada" />
+    <input type="button" value="comprueba" onclick="inicio(entrada.value)" />
+  </form>
+  <div id="salida"></div>
+</body>
+</html>

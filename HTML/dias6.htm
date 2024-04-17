@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verificar Permiso</title>
+</head>
+<body>
+<script>
+    function comprueba(lista, nombre) {
+        if (nombre.toLowerCase().startsWith('a')) {
+            return "Sí, permiso activo";
+        } else {
+            return "No tiene permiso activo";
+        }
+    }
+
+    let usuarios = ["Ana", "Juan", "María", "Pedro", "Alberto", "Luisa", "Andrés", "Laura", "Carlos", "Adriana"];
+
+    document.write("<h2>Listado de usuarios:</h2>");
+    for (let usuario of usuarios) {
+        document.write("<p>" + usuario + "</p>");
+    }
+
+    let nombreIngresado = prompt("Ingrese su nombre: ");
+    let resultado = comprueba(usuarios, nombreIngresado);
+    alert(resultado);
+</script>
+</body>
+</html>

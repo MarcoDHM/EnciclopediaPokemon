@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Funciones con operador condicional ternario</h1>
+  <script>
+    const permiso = (edad) => (edad >= 18) ? "Mayor de edad" : "Menor de edad";
+    const pantalla = (valor) => alert(valor);
+
+    const obtenerEdad = () => {
+      const respuesta = prompt("¿Cuántos años tiene?");
+      const edad = parseInt(respuesta);
+
+      if (!isNaN(edad)) {  // Verifica si la entrada es un número
+        const mensaje = permiso(edad);
+        pantalla(mensaje);
+      } else {
+        alert("Por favor, ingrese un número válido.");
+      }
+    };
+
+    obtenerEdad();
+  </script>
+</body>
+</html>

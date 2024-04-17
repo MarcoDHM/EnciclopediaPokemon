@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enciclopedia Pokémon</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #search-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #search-input {
+            padding: 15px;
+            font-size: 20px;
+            border: 2px solid #ccc;
+            border-radius: 25px;
+            width: 70%;
+            max-width: 400px;
+        }
+
+        #pokemon-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            justify-items: center;
+            margin-bottom: 30px;
+        }
+
+        .pokemon-card {
+            width: 200px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .pokemon-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .pokemon-card img {
+            width: 100%;
+            height: auto;
+        }
+
+        .pokemon-card .pokemon-info {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .pokemon-card h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .pokemon-card p {
+            margin: 8px 0;
+            font-size: 18px;
+            color: #666;
+        }
+
+        #pagination-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .pagination-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 20px;
+        }
+
+        .pagination-button:hover {
+            background-color: #0056b3;
+        }
+
+        #page-input {
+            width: 70px;
+            padding: 10px;
+            margin: 0 10px;
+            text-align: center;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+        }
+
+        #modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Nueva regla de estilo para la firma */
+        #signature {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <h1>¡Explora el Maravilloso Mundo Pokémon!</h1>
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="Busca tu Pokémon favorito...">
+    </div>
+    <div id="pokemon-list"></div>
+    <div id="pagination-container"></div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="pokemon-details"></div>
+        </div>
+    </div>
+
+    <!-- Firma simple -->
+    <div id="signature">
+        <p>Hecho por Marco de Haro</p>
+    </div>
+
+    <script>
+        const ITEMS_PER_PAGE = 20;
+        let currentPage = 1;
+        let filteredPokemon = [];
+
+        async function getPokemonData(pokemonName) {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+                if (!response.ok) {
+                    throw new Error('¡Oh no! Parece que este Pokémon se ha escondido. Intenta otro.');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function displayPokemonData(searchTerm = "") {
+            const pokemonListDiv = document.getElementById("pokemon-list");
+            const paginationContainer = document.getElementById("pagination-container");
+            pokemonListDiv.innerHTML = "";
+
+            const pokemonNames = await getAllPokemonNames();
+            filteredPokemon = pokemonNames.filter(name => name.includes(searchTerm.toLowerCase()));
+
+            const totalPages = Math.ceil(filteredPokemon.length / ITEMS_PER_PAGE);
+            if (totalPages > 1) {
+                paginationContainer.innerHTML = `
+                    <button class="pagination-button" id="prev-page">&lt; Página Anterior</button>
+                    <input type="text" id="page-input" placeholder="${currentPage}">
+                    <span> de ${totalPages}</span>
+                    <button class="pagination-button" id="next-page">Página Siguiente &gt;</button>
+                `;
+                document.getElementById("page-input").addEventListener("keypress", function(event) {
+                    if (event.key === "Enter") {
+                        const pageNum = parseInt(this.value);
+                        if (!isNaN(pageNum) && pageNum > 0 && pageNum <= totalPages) {
+                            currentPage = pageNum;
+                            displayPokemonData();
+                        }
+                    }
+                });
+            } else {
+                paginationContainer.innerHTML = "";
+            }
+
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const displayedPokemon = filteredPokemon.slice(startIndex, endIndex);
+
+            for (let pokemonName of displayedPokemon) {
+                const pokemonData = await getPokemonData(pokemonName);
+                const pokemonDiv = createPokemonCard(pokemonData);
+                pokemonListDiv.appendChild(pokemonDiv);
+            }
+
+            attachPaginationListeners();
+        }
+
+        async function getAllPokemonNames() {
+            const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1000");
+            const data = await response.json();
+            return data.results.map(result => result.name);
+        }
+
+        function createPokemonCard(pokemonData) {
+            const pokemonDiv = document.createElement("div");
+            pokemonDiv.classList.add("pokemon-card");
+            pokemonDiv.innerHTML = `
+                <img src="${pokemonData.sprites.front_default}" alt="${pokemonData.name}">
+                <div class="pokemon-info">
+                    <h2>${pokemonData.name}</h2>
+                    <p>Altura: ${pokemonData.height / 10} m</p>
+                    <p>Peso: ${pokemonData.weight / 10} kg</p>
+                </div>
+            `;
+            pokemonDiv.addEventListener("click", async function() {
+                const pokemonDetails = await getPokemonData(pokemonData.name);
+                displayPokemonDetails(pokemonDetails);
+            });
+            return pokemonDiv;
+        }
+
+        function displayPokemonDetails(pokemonData) {
+            const modal = document.getElementById("modal");
+            const modalContent = document.getElementById("pokemon-details");
+
+            modalContent.innerHTML = `
+                <h2>${pokemonData.name}</h2>
+                <p><b>Altura:</b> ${pokemonData.height / 10} m</p>
+                <p><b>Peso:</b> ${pokemonData.weight / 10} kg</p>
+                <p><b>Tipos:</b> ${pokemonData.types.map(type => type.type.name).join(", ")}</p>
+            `;
+            modal.style.display = "block";
+
+            const closeButton = document.getElementsByClassName("close")[0];
+            closeButton.onclick = function() {
+                modal.style.display = "none";
+            };
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+        }
+
+        function attachPaginationListeners() {
+            document.getElementById("prev-page").addEventListener("click", function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayPokemonData();
+                }
+            });
+
+            document.getElementById("next-page").addEventListener("click", function() {
+                const totalPages = Math.ceil(filteredPokemon.length / ITEMS_PER_PAGE);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayPokemonData();
+                }
+            });
+        }
+
+        document.getElementById("search-input").addEventListener("input", function() {
+            currentPage = 1;
+            const searchTerm = this.value.trim().toLowerCase();
+            displayPokemonData(searchTerm);
+        });
+
+        // Eliminamos el enlace oculto y simplemente proporcionamos el nombre del archivo
+        window.onload = function() {
+            displayPokemonData();
+        };
+    </script>
+</body>
+</html>

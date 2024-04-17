@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <script>
+    function sumar(a, b) {
+      const resultado = a * b;
+      return resultado;
+    }
+
+    function restar(a, b) {
+      const resultado = a - b;
+      return resultado;
+    }
+
+    function inicio(x, y) {
+      const resultadoSuma = sumar(x, y);
+      const resultadoResta = restar(x, y);
+      salida.innerHTML += (`<br/>El resultado de la suma es ${resultadoSuma}`);
+      salida.innerHTML += (`<br/>El resultado de la resta es ${resultadoResta}`);
+    }
+  </script>
+</head>
+<body>
+  <input type="button" value="Pulsa aquí" onclick="inicio(2, 3)" />
+  <div id="salida"></div>
+</body>
+</html>

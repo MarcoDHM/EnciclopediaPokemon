@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Costo de Energía Eléctrica</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+    }
+
+    .container {
+        width: 400px;
+        margin: 50px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    input[type="number"], input[type="button"] {
+        width: calc(100% - 20px);
+        height: 40px;
+        margin-bottom: 10px;
+        padding: 5px 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #resultado {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Calculadora de Costo de Energía Eléctrica</h1>
+    <label for="cantidad">Número de bombillas:</label>
+    <input type="number" id="cantidad" min="1" placeholder="Ingrese la cantidad"><br>
+    <label for="vatios">Vatios por bombilla:</label>
+    <input type="number" id="vatios" min="1" placeholder="Ingrese los vatios"><br>
+    <input type="button" value="Calcular Costo Mensual" onclick="calcularCosto()">
+    <div id="resultado"></div>
+</div>
+
+<script>
+    function calcularCosto() {
+        const cantidad = parseInt(document.getElementById("cantidad").value);
+        const vatios = parseInt(document.getElementById("vatios").value);
+
+        if (isNaN(cantidad) || isNaN(vatios)) {
+            alert("Por favor, ingrese números válidos para la cantidad y los vatios.");
+            return;
+        }
+
+        const horasPorDia = 4; // Supongamos que las bombillas se usan 4 horas al día
+        const diasPorMes = 30; // Supongamos que hay 30 días en un mes
+
+        // Suponemos un costo de energía de 0.15 euros por kWh
+        const costoPorKwh = 0.15;
+
+        // Calculamos el consumo mensual en kWh
+        const consumoMensualKwh = (cantidad * vatios * horasPorDia * diasPorMes) / 1000;
+
+        // Calculamos el costo mensual en euros
+        const costoMensualEuros = consumoMensualKwh * costoPorKwh;
+
+        // Mostramos el resultado en el div de resultado
+        document.getElementById("resultado").innerText = `El costo mensual de energía es: ${costoMensualEuros.toFixed(2)} euros`;
+    }
+</script>
+
+</body>
+</html>
+    

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title> Comprobación de Edad</title>
+  <script>
+    function permiso(dato) {
+      const edad = Number(dato);
+      const resultado = (edad < 21) ? 'Menor de edad' : 'Mayor de edad';
+      return resultado;
+    }
+
+    function inicio(dato) {
+      const mayorEdad = permiso(dato);
+      salida.innerHTML += (`<br/>El resultado es ${mayorEdad} `);
+    }
+  </script>
+</head>
+<body>
+  <form name="formulario_votacion">
+    Introduce edad: <input type="text" name="entrada" />
+    <input type="button" value="comprueba" onclick="inicio(entrada.value)" />
+  </form>
+  <div id="salida"></div>
+</body>
+</html>

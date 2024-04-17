@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <h1>Funciones en JavaScript (ES9)</h1>
+  <script>
+    const CalculaIVA = (numero) => {
+      const iva = numero * 0.21;
+      return iva;
+    }
+
+    const teclado = prompt('Dime un precio sin IVA:');
+    const numero = parseInt(teclado);
+    const resultado = CalculaIVA(numero);
+
+    alert(`El IVA es: ${resultado}`);
+  </script>
+</body>
+</html>
